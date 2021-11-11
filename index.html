@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <title>myWeather</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;}
+        
+.bg-dark{
+    background-color: #ffd11a!important;
+    padding: 10px 0px 10px 0px;}
+
+header h1{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+main{
+    height: 30vh;
+}
+
+.desc{
+    text-transform: capitalize;
+}
+
+        
+#display{
+    text-align: left;
+    width: 50%;
+    min-height: 20%;
+    background: #ffd11a;
+    margin: auto;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0px 0px 10px 4px rgb(201 201 5 75%)
+}
+        
+input[type="text"]{
+    border-radius: 35px;
+    padding: 10px;
+    width: 500px;
+    background: #333;
+    color: #fff;
+    font-weight: 700;
+}
+        
+input:focus-visible{
+    outline: none;
+}
+        
+input[type="submit"]{
+    border-radius: 32px;
+    padding: 10px;
+    width: 7rem;
+    margin-left: 10px;
+}
+        
+span{
+    font-weight: 500;
+}
+        
+.dateTime{
+    height: 2.5rem;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="text-black bg-dark text-center" style="width: 100%;">Aaj Ka Mousam</h1>
+    </header>
+
+    <main class="input d-flex justify-content-center align-items-center">
+        <input type="text" class="inputValue" placeholder="Enter City">
+        <input type="submit" value="Submit" class="button btn btn-primary fw-bold">
+    </main>
+    
+    <div id="display" class="fw-bold">
+        <div class="row dateTime">
+            <div class="col-sm">Date : <span class="date"></span></div>
+            <div class="col-sm">Time : <span id="time"></span></div>
+        </div>
+        
+        <div>Name : <span class="name"></span></div> <br/>
+        <div>Desc : <span class="desc"></span></div> <br/>
+        <div>Temp : <span class="temp"></span> <sup>o</sup>C</div> <br/>
+        <div>Min Temp : <span class="min"></span> <sup>o</sup>C</div> <br/>
+        <div>Max Temp : <span class="max"></span> <sup>o</sup>C</div> <br/>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+        var inputValue = document.querySelector('.inputValue');
+        var button = document.querySelector('.button');
+        var cityName = document.querySelector('.name');
+        var desc = document.querySelector('.desc');
+        var temp = document.querySelector('.temp');
+        var minTemp = document.querySelector('.min');
+        var maxTemp = document.querySelector('.max');
+
+        button.addEventListener('click',function()
+        {
+            fetch('https://api.openweathermap.org/data/2.5/weather?q='+inputValue.value+'&appid=46c4d143651db89410e08a6e7010ad41&units=metric')
+        .then(response => response.json())
+        // .then(data => console.log(data))
+        .then(data => {
+  var nameCityValue = data['name'];
+  var tempValue = data['main']['temp'];
+  var tempMinValue = data['main']['temp_min'];
+  var tempMaxValue = data['main']['temp_max'];
+  var descValue = data['weather'][0]['description'];
+
+  cityName.innerHTML = nameCityValue;
+  temp.innerHTML = tempValue;
+  desc.innerHTML = descValue;
+  minTemp.innerHTML = tempMinValue;
+  maxTemp.innerHTML = tempMaxValue;
+
+})
+        .catch(err => alert("wrong city name"))
+
+        })
+
+  const str = new Date().toLocaleString('en-US', {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true
+})
+document.getElementById("time").innerHTML = str;
+
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const dateObj = new Date();
+    const month = monthNames[dateObj.getMonth()];
+    const date = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    const day = weekday[dateObj.getDay()];
+    const output = day + ' ' + month  + '\n'+ date  + ',' + year;
+
+    document.querySelector('.date').textContent = output;
+    </script>
+
+</body>
+</html>
